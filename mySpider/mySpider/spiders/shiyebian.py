@@ -1,6 +1,8 @@
+import os
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 import scrapy
 from scrapy.http import Request
-from spiders.article import Article
+from .article import Article
 from .article_writer import ArticleWriter, ArticleWriterType
 from .mysql_connector import MysqlConnector
 
@@ -39,7 +41,7 @@ class ShiyebianSpider(scrapy.Spider):
         article = Article(self.id)
         if title == "服务器错误":
             self.error_count += 1
-            print('errorcount:'+str(self.error_count))
+            #print('errorcount:'+str(self.error_count))
         elif title[-2:] in ['公告', '通告', '简章', '启事', '通知', '方案']:
             self.error_count = 0
             #print("get:"+title)
@@ -58,6 +60,6 @@ class ShiyebianSpider(scrapy.Spider):
             yield Request(self.__get_url(), callback=self.parse)
 
     def close(spider, reason):
-        print("valid_count:" + str(spider.valid_count))
+        print(str(spider.valid_count))
 
 

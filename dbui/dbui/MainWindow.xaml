@@ -1,0 +1,68 @@
+﻿<Window x:Class="dbui.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:dbui"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <DockPanel>
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Header="刷新数据" Name="miRefurbish" Click="MiRefurbish_OnClick"></MenuItem>
+            </Menu>
+            <StatusBar DockPanel.Dock="Bottom" Height="20">
+                <StatusBarItem>
+                    <TextBlock Name="tbStatus" />
+                </StatusBarItem>
+            </StatusBar>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <DockPanel Grid.Column="0">
+                    <Grid DockPanel.Dock="Top">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Name="tbSearch" Grid.ColumnSpan="5" KeyDown="TbSearch_OnKeyDown"></TextBox>
+                        <Button Name="btnSearch" Grid.Column="7" Click="BtnSearch_OnClick">执行</Button>
+                    </Grid>
+                    <ListView Name="lvData" DockPanel.Dock="Bottom" SelectionChanged="LvData_OnSelectionChanged">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="Background" Value="{Binding Path=ItemColor}"></Setter>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="标题" Width="120" DisplayMemberBinding="{Binding Path=Title}"/>
+                                <GridViewColumn Header="发布日期" Width="100" DisplayMemberBinding="{Binding Path=PublishDateString}"/>
+                                <GridViewColumn Header="截止日期" Width="100" DisplayMemberBinding="{Binding Path=EndDateString}"/>
+                                <GridViewColumn Header="招聘届" Width="80" DisplayMemberBinding="{Binding Path=IncomingYear}" />
+                                <GridViewColumn Header="城市" Width="100" DisplayMemberBinding="{Binding Path=City}"/>
+                                <GridViewColumn Header="区域" Width="100" DisplayMemberBinding="{Binding Path=Area}"/>
+                                <GridViewColumn Header="单位名称" Width="60" DisplayMemberBinding="{Binding Path=Company}"/>
+                                <GridViewColumn Header="职位名称" Width="60" DisplayMemberBinding="{Binding Path=Job}"/>
+
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </DockPanel>
+                <ScrollViewer Grid.Column="1">
+                    <StackPanel >
+                        <TextBox Name="tbContent" IsReadOnly="True"></TextBox>
+                        <StackPanel Name="spFiles"></StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+        </DockPanel>
+        
+    </Grid>
+</Window>
