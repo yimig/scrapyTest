@@ -42,14 +42,14 @@
                         </ListView.ItemContainerStyle>
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn Header="标题" Width="120" DisplayMemberBinding="{Binding Path=Title}"/>
+                                <GridViewColumn Header="标题" Width="300" DisplayMemberBinding="{Binding Path=Title}"/>
                                 <GridViewColumn Header="发布日期" Width="100" DisplayMemberBinding="{Binding Path=PublishDateString}"/>
                                 <GridViewColumn Header="截止日期" Width="100" DisplayMemberBinding="{Binding Path=EndDateString}"/>
-                                <GridViewColumn Header="招聘届" Width="80" DisplayMemberBinding="{Binding Path=IncomingYear}" />
-                                <GridViewColumn Header="城市" Width="100" DisplayMemberBinding="{Binding Path=City}"/>
-                                <GridViewColumn Header="区域" Width="100" DisplayMemberBinding="{Binding Path=Area}"/>
-                                <GridViewColumn Header="单位名称" Width="60" DisplayMemberBinding="{Binding Path=Company}"/>
-                                <GridViewColumn Header="职位名称" Width="60" DisplayMemberBinding="{Binding Path=Job}"/>
+                                <GridViewColumn Header="招聘届" Width="40" DisplayMemberBinding="{Binding Path=IncomingYear}" />
+                                <GridViewColumn Header="城市" Width="50" DisplayMemberBinding="{Binding Path=City}"/>
+                                <GridViewColumn Header="区域" Width="50" DisplayMemberBinding="{Binding Path=Area}"/>
+                                <GridViewColumn Header="单位名称" Width="200" DisplayMemberBinding="{Binding Path=Company}"/>
+                                <GridViewColumn Header="职位名称" Width="200" DisplayMemberBinding="{Binding Path=Job}"/>
 
                             </GridView>
                         </ListView.View>
