@@ -32,8 +32,16 @@ namespace dbui
         {
             InitializeComponent();
             connector=new DbConnector();
+            ReloadListView();
+            BeginRefurbish();
+        }
+
+        private void ReloadListView()
+        {
             Articles = connector.GetAllArticle();
+            lvData.SelectedItem = null;
             lvData.ItemsSource = Articles;
+            lvData.UpdateLayout();
         }
 
         public List<Article> Articles
@@ -62,7 +70,7 @@ namespace dbui
             spFiles.Children.Add(btn);
         }
 
-        static async Task<string> RunPythonProcess()
+        async Task<string> RunPythonProcess()
         {
             string res = "";
             using (Process p = new Process())
@@ -91,10 +99,10 @@ namespace dbui
                     p.BeginOutputReadLine();
                     p.WaitForExit(); //等待程序执行完退出进程
                 });
+                ReloadListView();
                 p.Close();
 
             }
-
             return res;
         }
 
@@ -110,6 +118,7 @@ namespace dbui
             var article = lvData.SelectedItem as Article;
             if (article!=null)
             {
+                spFiles.Children.Clear();
                 tbContent.Text = article.Content;
                 foreach (var filePair in article.Files)
                 {
