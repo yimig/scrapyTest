@@ -13,9 +13,9 @@ class MysqlConnector:
 
     def __execute_sql(self, sql: str):
         cursor = self.conn.cursor()
-        cursor.execute(sql)
+        #cursor.execute(sql)
         try:
-            # cursor.execute(sql)
+            cursor.execute(sql)
             self.conn.commit()
         except:
             self.conn.rollback()
@@ -33,14 +33,18 @@ class MysqlConnector:
 
     def set_article(self, article_obj: Article):
         files_str = json.dumps(article_obj.files, ensure_ascii=False)
-        sql = "insert into article values('%d','%s','%s','%s','%s','%d','%s','%s','%s','%s')" % (article_obj.id, article_obj.title, article_obj.content, files_str, article_obj.publish_date, article_obj.incoming_year, article_obj.city, article_obj.area, article_obj.company, article_obj.job)
+        sql = "insert into article values('%d','%s','%s','%s','%s','%d','%s','%s','%s','%s','%s')" % (article_obj.id, article_obj.title, article_obj.content, files_str, article_obj.publish_date, article_obj.incoming_year, article_obj.city, article_obj.area, article_obj.company, article_obj.job, article_obj.end_date)
         self.__execute_sql(sql)
 
     def set_latest_id(self, id: int):
         self.__set_config('latest_id', str(id))
 
     def get_latest_id(self):
-        return self.__get_config('latest_id')
+        cursor = self.conn.cursor()
+        sql = "select max(id) from article"
+        cursor.execute(sql)
+        res = cursor.fetchone()[0]
+        return int(res)
 
     def close_connection(self):
         self.conn.close()

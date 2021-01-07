@@ -14,7 +14,7 @@ class Article:
     area = ""
     company = ""
     job = ""
-    end_time = None
+    end_date = None
 
     __city_suffix = ['市']
     __area_suffix = ['区', '县', '镇', '自治州', '自治旗']
@@ -56,6 +56,7 @@ class Article:
         '发布时间：2021-01-04 10:54:33　来源：'
         raw_date_str = re.sub('\s', ' ', raw_date_str)
         date_str = re.findall('\d{4}-\d{2}-\d{2}', raw_date_str)
+        dt = None
         if date_str:
             date_list = self.__intalize(date_str[0].split('-'))
             time_str = re.findall('\d{2}:\d{2}:\d{2}', raw_date_str)
@@ -64,8 +65,6 @@ class Article:
                 dt = datetime.datetime(year=date_list[0], month=date_list[1], day=date_list[2], hour=time_list[0], minute=time_list[1], second=time_list[2])
             else:
                 dt = datetime.datetime(year=date_list[0], month=date_list[1], day=date_list[2])
-        else:
-            dt = datetime.datetime.now()
         return dt
 
     # 将字符串列表转换成整型列表
@@ -133,6 +132,25 @@ class Article:
             pos = len(title)-2
         return pos
 
+    def __get_end_date(self, content: str):
+        r_content = content.replace('日讯', '')
+        date_list = []
+        for date_str in re.findall('(\d{4})年(\d{2}|\d)月(\d{2}|\d)日', r_content):
+            date_int = self.__intalize(date_str)
+            try:
+                date_list.append(datetime.datetime(year=date_int[0], month=date_int[1], day=date_int[2]))
+            except:
+                pass
+        short_date_list = re.findall('(至|-|—)(\d{2}|\d)月(\d{2}|\d)日', r_content)
+        if len(short_date_list) > 0:
+            short_date = short_date_list[-1]
+            end_pos = r_content.find(short_date[1] + '月' + short_date[2] + '日')
+            year_list = re.findall('(\d{4})年', r_content[:end_pos])
+            date_list.append(
+                datetime.datetime(year=int(year_list[-1]), month=int(short_date[1]), day=int(short_date[2])))
+        if len(date_list) > 0:
+            self.end_date = max(date_list)
+
     def __analyze_title(self, title: str):
         '2021年福建水利电力职业技术学院招聘专任教师及辅导员公告'
         pos = 0
@@ -142,8 +160,12 @@ class Article:
         pos = self.__get_company(title, pos)
         self.__get_job(title, pos)
 
+    def __analyze_content(self, content: str):
+        self.__get_end_date(content)
+
     def begin_analyze(self):
         self.__analyze_title(self.title)
+        self.__analyze_content(self.content)
 
 
     def __init__(self, id:int, title: str, content_list: list, xpath_files, date_str: str):
