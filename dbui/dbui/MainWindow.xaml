@@ -5,12 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:dbui"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800" Closing="MainWindow_OnClosing">
     <Grid>
         <DockPanel>
-            <Menu DockPanel.Dock="Top">
-                <MenuItem Header="刷新数据" Name="miRefurbish" Click="MiRefurbish_OnClick"></MenuItem>
-            </Menu>
+            <ToolBar DockPanel.Dock="Top">
+                <Button Name="btnRefurbish" Content="刷新数据" Click="BtnRefurbish_OnClick" Margin="5 0"></Button>
+                <CheckBox Name="cbOpenFavorite" Content="收藏夹" Click="cbOpenFavorite_OnClick" Margin="5 0"></CheckBox>
+                <CheckBox Name="cbAddToFavorite" Content="添加到收藏夹" Click="cbAddToFavorite_OnClick" Margin="100 0 0 0"></CheckBox>
+            </ToolBar>
             <StatusBar DockPanel.Dock="Bottom" Height="20">
                 <StatusBarItem>
                     <TextBlock Name="tbStatus" />
@@ -50,7 +52,7 @@
                                 <GridViewColumn Header="区域" Width="50" DisplayMemberBinding="{Binding Path=Area}"/>
                                 <GridViewColumn Header="单位名称" Width="200" DisplayMemberBinding="{Binding Path=Company}"/>
                                 <GridViewColumn Header="职位名称" Width="200" DisplayMemberBinding="{Binding Path=Job}"/>
-
+                                <GridViewColumn Header="Color" Width="200" DisplayMemberBinding="{Binding Path=ItemColor}"/>
                             </GridView>
                         </ListView.View>
                     </ListView>

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -26,11 +27,14 @@ namespace dbui
     public partial class MainWindow : Window
     {
         private List<Article> articles;
+        private List<int> favoriteArticlesId;
         private DbConnector connector;
 
         public MainWindow()
         {
             InitializeComponent();
+            if (Settings.CheckSettingFile())favoriteArticlesId = Settings.ReadFavorite();
+            else favoriteArticlesId=new List<int>();
             connector=new DbConnector();
             ReloadListView();
             BeginRefurbish();
@@ -39,8 +43,14 @@ namespace dbui
         private void ReloadListView()
         {
             Articles = connector.GetAllArticle();
+            BrushFavoriteArticles();
+            if(!(bool)cbOpenFavorite.IsChecked) LoadListView(Articles);
+        }
+
+        private void LoadListView(List<Article> articles)
+        {
             lvData.SelectedItem = null;
-            lvData.ItemsSource = Articles;
+            lvData.ItemsSource = articles;
             lvData.UpdateLayout();
         }
 
@@ -57,7 +67,11 @@ namespace dbui
         private void ExecuteSql()
         {
             string sql = "select * from article where " + tbSearch.Text + " order by id desc";
-            Articles = connector.GetArticles(sql);
+            if (tbSearch.Text == "") Articles = connector.GetAllArticle();
+            else
+            {
+                Articles = connector.GetArticles(sql);
+            }
             lvData.SelectedItem = null;
             lvData.ItemsSource = Articles;
             lvData.UpdateLayout();
@@ -108,9 +122,42 @@ namespace dbui
 
         private async void BeginRefurbish()
         {
-            tbStatus.Text = "更新命令已发出";
+            tbStatus.Text = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss: ") + "更新命令已发出";
             var res = await RunPythonProcess();
-            tbStatus.Text = res;
+            tbStatus.Text = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss: ") + res;
+        }
+
+        private List<Article> GetFavoriteArticles()
+        {
+            var resList = new List<Article>();
+            foreach (var fid in favoriteArticlesId)
+            {
+                foreach (var article in Articles)
+                {
+                    if (article.Id == fid)
+                    {
+                        resList.Add(article);
+                        break;
+                    }
+                }
+            }
+
+            return resList;
+        }
+
+        private void BrushFavoriteArticles()
+        {
+            foreach (var fid in favoriteArticlesId)
+            {
+                foreach (var article in Articles)
+                {
+                    if (article.Id == fid)
+                    {
+                        article.IsFavorite = true;
+                        break;
+                    }
+                }
+            }
         }
 
         private void LvData_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -118,12 +165,14 @@ namespace dbui
             var article = lvData.SelectedItem as Article;
             if (article!=null)
             {
+                cbAddToFavorite.IsChecked = article.IsFavorite;
                 spFiles.Children.Clear();
                 tbContent.Text = article.Content;
                 foreach (var filePair in article.Files)
                 {
                     BuildFileButton(filePair.Key, filePair.Value);
                 }
+                lvData.UpdateLayout();
             }
         }
 
@@ -155,9 +204,46 @@ namespace dbui
 
         #endregion
 
-        private void MiRefurbish_OnClick(object sender, RoutedEventArgs e)
+
+        private void BtnRefurbish_OnClick(object sender, RoutedEventArgs e)
         {
             BeginRefurbish();
+        }
+
+        private void cbOpenFavorite_OnClick(object sender, RoutedEventArgs e)
+        {
+            if ((bool) cbOpenFavorite.IsChecked)
+            {
+                LoadListView(GetFavoriteArticles());
+            }
+            else
+            {
+                LoadListView(Articles);
+            }
+        }
+
+        private void cbAddToFavorite_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (lvData.SelectedItem != null)
+            {
+                var selectedArticle = lvData.SelectedItem as Article;
+                if ((bool) cbAddToFavorite.IsChecked)
+                {
+                    selectedArticle.IsFavorite = true;
+                    favoriteArticlesId.Add(selectedArticle.Id);
+
+                }
+                else
+                {
+                    selectedArticle.IsFavorite = false;
+                    favoriteArticlesId.Remove(selectedArticle.Id);
+                }
+            }
+        }
+
+        private void MainWindow_OnClosing(object sender, CancelEventArgs e)
+        {
+            Settings.WriteFavorite(favoriteArticlesId);
         }
     }
 }

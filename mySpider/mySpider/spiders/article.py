@@ -65,6 +65,13 @@ class Article:
                 dt = datetime.datetime(year=date_list[0], month=date_list[1], day=date_list[2], hour=time_list[0], minute=time_list[1], second=time_list[2])
             else:
                 dt = datetime.datetime(year=date_list[0], month=date_list[1], day=date_list[2])
+        else:
+            date_str = re.findall('(\d{4})年(\d{2}|\d)月(\d{2}|\d)日', self.content)[0]
+            date_int = self.__intalize(date_str)
+            try:
+                dt = datetime.datetime(year=date_int[0], month=date_int[1], day=date_int[2])
+            except:
+                pass
         return dt
 
     # 将字符串列表转换成整型列表

@@ -53,7 +53,8 @@ class ShiyebianSpider(scrapy.Spider):
             self.writer.write(article)
             self.valid_count += 1
         else:
-            print(title)
+            #print(title)
+            pass
         self.id += 1
         #print(str(article))
         if self.error_count < 10:

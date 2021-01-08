@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,8 +8,9 @@ using System.Windows.Media;
 
 namespace dbui.Model
 {
-    public class Article
+    public class Article : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
         public int Id { get; set; }
         public string Title { get; set; }
         public DateTime PublishDate { get; set; }
@@ -24,15 +26,46 @@ namespace dbui.Model
         public string PublishDateString => PublishDate.ToString("yyyy年MM月dd日");
         public string EndDateString => EndDate.ToString("yyyy年MM月dd日");
 
+
+        private bool isFavorite;
+        public bool IsFavorite
+        {
+            get => isFavorite;
+            set
+            {
+                isFavorite = value;
+                if (value)
+                {
+                    ItemColor = new SolidColorBrush(Color.FromRgb(134, 204, 142));
+                }
+                else
+                {
+                    ItemColor=new SolidColorBrush(Color.FromRgb(255, 255, 255));
+                }
+            }
+        }
+
+        private Brush itemColor;
+
         public Brush ItemColor
         {
-            get
+            get => itemColor;
+            set
             {
-                Color color = Color.FromRgb(255, 255, 255);
-                if(DateTime.Now>EndDate)color=Color.FromRgb(255, 204, 204);
-                else if((EndDate-DateTime.Now).Days<2)color=Color.FromRgb(246,217,111);
-                return new SolidColorBrush(color);
+                itemColor = value;
+                if (PropertyChanged != null)
+                {
+                    PropertyChanged(this, new PropertyChangedEventArgs("ItemColor"));
+                }
             }
+        }
+
+        public void InitItemColor()
+        {
+            Color color = Color.FromRgb(255, 255, 255);
+            if (DateTime.Now > EndDate) color = Color.FromRgb(255, 204, 204);
+            else if ((EndDate - DateTime.Now).Days < 2) color = Color.FromRgb(246, 217, 111);
+            ItemColor = new SolidColorBrush(color);
         }
     }
 }
