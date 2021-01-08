@@ -46,6 +46,7 @@ namespace dbui.Data
                     article.Company = Convert.ToString(rdr[8]);
                     article.Job = Convert.ToString(rdr[9]);
                     article.EndDate = DateTime.Parse(Convert.ToString(rdr[10]));
+                    article.InitItemColor();
                     articles.Add(article);
                 }
                 rdr.Close();
