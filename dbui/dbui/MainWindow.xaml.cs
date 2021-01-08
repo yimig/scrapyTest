@@ -160,6 +160,13 @@ namespace dbui
             }
         }
 
+        private void BuildNavigateButton(int id)
+        {
+            var btn = new Button { Content = "前往原始网页", Height = 30, Margin = new Thickness(5),Background = new SolidColorBrush(Color.FromRgb(0,191,255))};
+            btn.Click += (sender, args) => { System.Diagnostics.Process.Start($"http://www.shiyebian.net/xinxi/{id}.html"); };
+            spFiles.Children.Add(btn);
+        }
+
         private void LvData_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var article = lvData.SelectedItem as Article;
@@ -172,6 +179,7 @@ namespace dbui
                 {
                     BuildFileButton(filePair.Key, filePair.Value);
                 }
+                BuildNavigateButton(article.Id);
                 lvData.UpdateLayout();
             }
         }
