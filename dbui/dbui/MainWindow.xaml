@@ -23,7 +23,13 @@
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <DockPanel Grid.Column="0">
+                <ScrollViewer Grid.Column="1">
+                    <StackPanel >
+                        <TextBox Name="tbContent" IsReadOnly="True" TextWrapping="Wrap" FontSize="25"></TextBox>
+                        <StackPanel Name="spFiles"></StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+                <DockPanel Grid.Column="0" Name="dpListPanel" Grid.ColumnSpan="2">
                     <Grid DockPanel.Dock="Top">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition></ColumnDefinition>
@@ -36,33 +42,27 @@
                         <TextBox Name="tbSearch" Grid.ColumnSpan="5" KeyDown="TbSearch_OnKeyDown"></TextBox>
                         <Button Name="btnSearch" Grid.Column="7" Click="BtnSearch_OnClick">执行</Button>
                     </Grid>
-                    <ListView Name="lvData" DockPanel.Dock="Bottom" SelectionChanged="LvData_OnSelectionChanged">
+                    <ListView Name="lvData" DockPanel.Dock="Bottom" SelectionChanged="LvData_OnSelectionChanged" PreviewMouseWheel="LvData_OnPreviewMouseWheel">
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <Setter Property="Background" Value="{Binding Path=ItemColor}"></Setter>
+                                <Setter Property="FontSize" Value="25"></Setter>
                             </Style>
                         </ListView.ItemContainerStyle>
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn Header="标题" Width="300" DisplayMemberBinding="{Binding Path=Title}"/>
-                                <GridViewColumn Header="发布日期" Width="100" DisplayMemberBinding="{Binding Path=PublishDateString}"/>
-                                <GridViewColumn Header="截止日期" Width="100" DisplayMemberBinding="{Binding Path=EndDateString}"/>
-                                <GridViewColumn Header="招聘届" Width="40" DisplayMemberBinding="{Binding Path=IncomingYear}" />
-                                <GridViewColumn Header="城市" Width="50" DisplayMemberBinding="{Binding Path=City}"/>
-                                <GridViewColumn Header="区域" Width="50" DisplayMemberBinding="{Binding Path=Area}"/>
-                                <GridViewColumn Header="单位名称" Width="200" DisplayMemberBinding="{Binding Path=Company}"/>
-                                <GridViewColumn Header="职位名称" Width="200" DisplayMemberBinding="{Binding Path=Job}"/>
-                                <GridViewColumn Header="Color" Width="200" DisplayMemberBinding="{Binding Path=ItemColor}"/>
+                                <GridViewColumn Header="标题" Width="600" DisplayMemberBinding="{Binding Path=Title}"/>
+                                <GridViewColumn Header="招聘届" Width="70" DisplayMemberBinding="{Binding Path=IncomingYear}" />
+                                <GridViewColumn Header="城市" Width="100" DisplayMemberBinding="{Binding Path=City}"/>
+                                <GridViewColumn Header="区域" Width="100" DisplayMemberBinding="{Binding Path=Area}"/>
+                                <GridViewColumn Header="单位名称" Width="400" DisplayMemberBinding="{Binding Path=Company}"/>
+                                <GridViewColumn Header="职位名称" Width="400" DisplayMemberBinding="{Binding Path=Job}"/>
+                                <GridViewColumn Header="发布日期" Width="200" DisplayMemberBinding="{Binding Path=PublishDateString}"/>
+                                <GridViewColumn Header="截止日期" Width="200" DisplayMemberBinding="{Binding Path=EndDateString}"/>
                             </GridView>
                         </ListView.View>
                     </ListView>
                 </DockPanel>
-                <ScrollViewer Grid.Column="1">
-                    <StackPanel >
-                        <TextBox Name="tbContent" IsReadOnly="True"></TextBox>
-                        <StackPanel Name="spFiles"></StackPanel>
-                    </StackPanel>
-                </ScrollViewer>
             </Grid>
         </DockPanel>
         

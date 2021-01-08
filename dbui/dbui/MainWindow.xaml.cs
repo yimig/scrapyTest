@@ -172,6 +172,7 @@ namespace dbui
             var article = lvData.SelectedItem as Article;
             if (article!=null)
             {
+                Grid.SetColumnSpan(dpListPanel,1);
                 cbAddToFavorite.IsChecked = article.IsFavorite;
                 spFiles.Children.Clear();
                 tbContent.Text = article.Content;
@@ -252,6 +253,11 @@ namespace dbui
         private void MainWindow_OnClosing(object sender, CancelEventArgs e)
         {
             Settings.WriteFavorite(favoriteArticlesId);
+        }
+
+        private void LvData_OnPreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            Grid.SetColumnSpan(dpListPanel,2);
         }
     }
 }
